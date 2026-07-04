@@ -1,0 +1,117 @@
+# Bolt
+
+A native macOS keyboard launcher. One hotkey, fuzzy search across apps, files, windows and commands, with clipboard history, window tiling, snippets and more built in. 100% Swift/SwiftUI, no Electron, no backend, idles in the tens of MB.
+
+## Build and install
+
+```bash
+./build-app.sh            # builds dist/Bolt.app
+./build-app.sh --install  # also copies to /Applications and launches
+```
+
+Requires Xcode command line tools (Swift 5.9+). For development, `swift build && swift run` works too, but permissions are tied to the app bundle, so day-to-day use should be the installed .app.
+
+## Permissions (one-time)
+
+Bolt asks for these on first run, all in System Settings > Privacy & Security:
+
+- Accessibility: required for window tiling, menu bar search, window switching, auto-paste and snippet expansion. The Option+Space hotkey and app/file search work without it.
+- Automation > System Events / Finder: prompted the first time you run a system command that uses AppleScript (Toggle Dark Mode, Empty Trash, Restart).
+
+If something silently does nothing, check Accessibility first. After reinstalling to a different path, re-grant it.
+
+## Hotkeys
+
+| Hotkey | Action |
+|---|---|
+| Option+Space | Toggle the launcher |
+| Ctrl+Option+V | Clipboard history |
+| Ctrl+Option+S | Scratchpad |
+| Ctrl+Option+Arrow | Tile window to half (left/right/top/bottom) |
+| Ctrl+Option+U / I / J / K | Tile window to quarter |
+| Ctrl+Option+Return | Maximize window |
+| Ctrl+Option+C | Center window |
+| Ctrl+Option+N | Move window to next display |
+
+Inside the launcher: type to search, arrows or Ctrl+N/P to move, Enter to run, Cmd+1..9 to run the nth result, Esc to close. Destructive commands (Restart, Shut Down, Empty Trash, Force Quit) ask for Enter twice.
+
+## Search syntax
+
+| Type | Get |
+|---|---|
+| `vsco` | Apps, open windows, files, commands, all fuzzy ranked |
+| `1920*0.18` | Inline calculator, Enter copies |
+| `18% of 25000` or `18% on 25000` | Percentage (the `on` form adds it, GST style) |
+| `3 miles to km`, `16 gb in mb`, `72 f to c` | Unit conversion |
+| `100 usd to inr` | Currency (daily ECB rates, cached 24h) |
+| `#ff8800` | Color conversions (hex / rgb / hsl) |
+| `clip` or `clip <text>` | Clipboard history. Enter pastes, Cmd+Enter copies, Ctrl+Enter deletes |
+| `kill <name>` | Processes by CPU. Enter SIGTERM, Cmd+Enter SIGKILL |
+| `define <word>` | System dictionary |
+| `:fire` or `emoji rocket` | Emoji, Enter pastes |
+| `/save` | Menu items of the app you were in, Enter triggers |
+| `g <query>`, `gh`, `yt`, `npm`, `wiki`, ... | Quicklinks (web searches) |
+| `quit safari`, `force quit chrome` | Quit running apps |
+| `lock`, `sleep`, `dark mode`, `empty trash`, `mute` | System commands |
+| `left half`, `maximize`, `center` | Window tiling by name |
+| `snippet` name or `;keyword` | Snippets, Enter pastes |
+| `pick color` | Screen eyedropper, copies hex |
+| `note` | Scratchpad |
+
+Results are ranked by fuzzy match score plus frecency (things you pick often float up). On an empty query you get your most-used apps.
+
+## Snippets
+
+Search insertion works out of the box. Live expansion (type `;sig` anywhere and it becomes the snippet) needs Accessibility and is on by default; toggle `snippetExpansionEnabled` in config.
+
+Edit `~/.bolt/snippets.json`:
+
+```json
+[
+  { "keyword": ";sig", "name": "Email signature", "content": "Best,\nYour Name" }
+]
+```
+
+Placeholders: `{date}`, `{time}`, `{clipboard}`. Run "Reload Bolt Config" from the launcher after editing.
+
+## Quicklinks
+
+Edit `~/.bolt/quicklinks.json`. `{query}` is replaced with whatever you type after the keyword, URL-encoded. `base` opens when there is no argument.
+
+```json
+[
+  { "keyword": "gh", "name": "GitHub", "template": "https://github.com/search?q={query}", "base": "https://github.com" }
+]
+```
+
+## Config
+
+`~/.bolt/config.json`:
+
+| Key | Default | Meaning |
+|---|---|---|
+| `clipboardHistoryEnabled` | true | Watch the pasteboard |
+| `clipboardCapacity` | 50 | FIFO cap, oldest evicted |
+| `snippetExpansionEnabled` | true | Live `;keyword` expansion |
+| `fileSearchEnabled` | true | mdfind file results |
+| `currencyEnabled` | true | Daily rates fetch (the app's only network call) |
+| `maxResults` | 40 | Result list cap |
+
+Runtime data (clipboard history, frecency, rates cache, scratchpad) lives in `~/Library/Application Support/Bolt/`.
+
+## Privacy notes
+
+- Clipboard history persists to disk unencrypted. Entries marked transient/concealed by password managers are skipped automatically. `clip` then Ctrl+Enter deletes a single entry.
+- The only network request is the daily currency rates fetch (api.frankfurter.app); set `currencyEnabled` to false for a fully offline build.
+
+## Architecture
+
+SPM executable, packaged into an .app by `build-app.sh`. Carbon `RegisterEventHotKey` for hotkeys (no keystroke observation), non-activating borderless `NSPanel` + SwiftUI for the UI (the app you were in never loses focus), Accessibility API for window tiling / menu search / window switching, `mdfind` for files, a hand-written recursive-descent parser for the calculator, and JSON files for all state. No third-party dependencies.
+
+## Your data stays yours
+
+All personal customization (snippets, quicklinks, config) lives in `~/.bolt/` and all runtime state in `~/Library/Application Support/Bolt/`, both outside the repo. Pulling updates or rebuilding never touches them, and nothing you configure can end up in a commit.
+
+## License
+
+MIT, see [LICENSE](LICENSE).
