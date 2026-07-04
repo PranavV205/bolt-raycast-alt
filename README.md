@@ -2,6 +2,51 @@
 
 A native macOS keyboard launcher. One hotkey, fuzzy search across apps, files, windows and commands, with clipboard history, window tiling, snippets and more built in. 100% Swift/SwiftUI, no Electron, no backend, idles in the tens of MB.
 
+<p align="center"><img src="docs/screenshots/hero.png" width="660" alt="Bolt launcher showing app results"></p>
+
+[Features](#features) ·
+[Build and install](#build-and-install) ·
+[Permissions](#permissions-one-time) ·
+[Hotkeys](#hotkeys) ·
+[Search syntax](#search-syntax) ·
+[Snippets](#snippets) ·
+[Quicklinks](#quicklinks) ·
+[Config](#config) ·
+[Privacy](#privacy-notes) ·
+[Architecture](#architecture) ·
+[License](#license)
+
+## Features
+
+- **App launcher.** Fuzzy search with frecency ranking, the things you pick often float to the top. An empty query shows your most-used apps.
+- **File search.** Backed by Spotlight (`mdfind`), so results are instant.
+- **Window switcher.** Jump to any open window of any app.
+- **Menu bar search.** `/query` lists the menu items of the app you were just in and triggers them.
+- **Clipboard history.** Text and images, searchable, paste / copy / delete per entry. Entries marked concealed by password managers are skipped.
+- **Snippets.** Insert from search, or live-expand `;keyword` anywhere you type, with `{date}`, `{time}` and `{clipboard}` placeholders.
+- **Calculator.** Inline expressions and percentages, including the GST-style `18% on 25000`.
+- **Unit and currency conversion.** `3 miles to km`, `72 f to c`, `100 usd to inr` (daily ECB rates, cached).
+- **Color tools.** Hex / rgb / hsl conversions plus a screen eyedropper.
+- **Emoji picker.** `:fire`, Enter pastes it.
+- **Dictionary.** `define <word>` against the system dictionary.
+- **Process killer.** `kill <name>`, sorted by CPU.
+- **System commands.** Dark mode, empty trash, lock, sleep, restart, mute, quit and force-quit apps.
+- **Window management.** Halves, quarters, maximize, center, next display, by hotkey or by name.
+- **Quicklinks.** Keyword web searches (`g`, `gh`, `yt`, ...), fully customizable.
+- **Scratchpad.** A pop-up note that persists between sessions.
+
+| Calculator | Currency |
+|---|---|
+| ![Calculator](docs/screenshots/calculator.png) | ![Currency conversion](docs/screenshots/currency.png) |
+
+| Emoji | Color tools |
+|---|---|
+| ![Emoji search](docs/screenshots/emoji.png) | ![Color conversion](docs/screenshots/color.png) |
+
+| Unit conversion | Window management |
+|---|---|
+| ![Unit conversion](docs/screenshots/conversion.png) | ![Window commands](docs/screenshots/windows.png) |
+
 ## Build and install
 
 ```bash
