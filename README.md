@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/icon.png" width="128" alt="Bolt icon"></p>
+
 # Bolt
 
 A native macOS keyboard launcher. One hotkey, fuzzy search across apps, files, windows and commands, with clipboard history, window tiling, snippets and more built in. 100% Swift/SwiftUI, no Electron, no backend, idles in the tens of MB.
