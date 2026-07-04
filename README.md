@@ -39,13 +39,29 @@ A native macOS keyboard launcher. One hotkey, fuzzy search across apps, files, w
 |---|---|
 | ![Calculator](docs/screenshots/calculator.png) | ![Currency conversion](docs/screenshots/currency.png) |
 
-| Emoji | Color tools |
+| Unit conversion | Color tools |
 |---|---|
-| ![Emoji search](docs/screenshots/emoji.png) | ![Color conversion](docs/screenshots/color.png) |
+| ![Unit conversion](docs/screenshots/conversion.png) | ![Color conversion](docs/screenshots/color.png) |
 
-| Unit conversion | Window management |
+| Emoji | Dictionary |
 |---|---|
-| ![Unit conversion](docs/screenshots/conversion.png) | ![Window commands](docs/screenshots/windows.png) |
+| ![Emoji search](docs/screenshots/emoji.png) | ![Dictionary](docs/screenshots/dictionary.png) |
+
+| Clipboard history | Menu bar search |
+|---|---|
+| ![Clipboard history](docs/screenshots/clipboard.png) | ![Menu bar search](docs/screenshots/menubar.png) |
+
+| Window switcher | Window management |
+|---|---|
+| ![Window switcher](docs/screenshots/windowswitcher.png) | ![Window commands](docs/screenshots/windows.png) |
+
+| Process killer | System commands |
+|---|---|
+| ![Process killer](docs/screenshots/processes.png) | ![System commands](docs/screenshots/system.png) |
+
+| Quicklinks | |
+|---|---|
+| ![Quicklinks](docs/screenshots/quicklink.png) | |
 
 ## Build and install
 

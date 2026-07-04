@@ -63,7 +63,7 @@ final class MenuBarProvider {
             }
             let element = entry.element
             items.append(ResultItem(
-                id: "menu:\(appName):\(entry.path)",
+                id: "menu:\(appName):\(entry.path) > \(entry.title)",
                 title: entry.title,
                 subtitle: "\(appName)  ·  \(entry.path)",
                 icon: .symbol("filemenu.and.selection"),
