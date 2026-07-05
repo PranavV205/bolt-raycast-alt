@@ -15,17 +15,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             AX.promptForTrust()
         }
 
-        // Global hotkeys.
-        HotkeyManager.shared.register(keyCode: Keys.space, modifiers: Keys.optionMod) {
-            PanelController.shared.toggle()
-        }
-        HotkeyManager.shared.register(keyCode: Keys.v, modifiers: Keys.controlOptionMod) {
-            PanelController.shared.toggle(prefill: "clip ")
-        }
-        HotkeyManager.shared.register(keyCode: Keys.s, modifiers: Keys.controlOptionMod) {
-            Scratchpad.shared.toggle()
-        }
-        WindowManager.shared.registerHotkeys()
+        // Global hotkeys, user-rebindable via ~/.bolt/config.json.
+        HotkeyBindings.apply()
 
         // Background services.
         ClipboardManager.shared.start()
@@ -35,10 +26,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // "Reload Bolt Config" command.
         NotificationCenter.default.addObserver(
             forName: .boltReloadConfig, object: nil, queue: .main
-        ) { _ in
+        ) { [weak self] _ in
             let coordinator = PanelController.shared.coordinator
             coordinator.snippetsProvider.reload()
             coordinator.quicklinksProvider.load()
+            HotkeyBindings.apply()
+            self?.rebuildStatusMenu()
         }
     }
 
@@ -48,19 +41,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             systemSymbolName: "bolt.fill",
             accessibilityDescription: "Bolt"
         )
+        statusItem = item
+        rebuildStatusMenu()
+    }
+
+    // Rebuilt after config reloads so the labels track the user's bindings.
+    private func rebuildStatusMenu() {
+        func label(_ title: String, _ binding: String) -> String {
+            if let hint = HotkeyBindings.hint(binding) { return "\(title) (\(hint))" }
+            return title
+        }
 
         let menu = NSMenu()
-        menu.addItem(withTitle: "Open Bolt (Option+Space)", action: #selector(openLauncher), keyEquivalent: "")
-        menu.addItem(withTitle: "Clipboard History (Ctrl+Option+V)", action: #selector(openClipboard), keyEquivalent: "")
-        menu.addItem(withTitle: "Scratchpad (Ctrl+Option+S)", action: #selector(openScratchpad), keyEquivalent: "")
+        menu.addItem(withTitle: label("Open Bolt", "toggleLauncher"), action: #selector(openLauncher), keyEquivalent: "")
+        menu.addItem(withTitle: label("Clipboard History", "clipboardHistory"), action: #selector(openClipboard), keyEquivalent: "")
+        menu.addItem(withTitle: label("Scratchpad", "scratchpad"), action: #selector(openScratchpad), keyEquivalent: "")
         menu.addItem(.separator())
         menu.addItem(withTitle: "Open Config Folder", action: #selector(openConfig), keyEquivalent: "")
         menu.addItem(.separator())
         menu.addItem(withTitle: "Quit Bolt", action: #selector(quit), keyEquivalent: "q")
         for menuItem in menu.items { menuItem.target = self }
-        item.menu = menu
-
-        statusItem = item
+        statusItem?.menu = menu
     }
 
     @objc private func openLauncher() { PanelController.shared.show() }

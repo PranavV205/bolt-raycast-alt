@@ -42,19 +42,25 @@ enum WindowAction: String, CaseIterable {
         }
     }
 
+    // Derived from the live bindings so hints stay honest after rebinding.
     var hotkeyHint: String? {
+        guard let name = bindingName else { return nil }
+        return HotkeyBindings.hint(name)
+    }
+
+    var bindingName: String? {
         switch self {
-        case .leftHalf: return "⌃⌥←"
-        case .rightHalf: return "⌃⌥→"
-        case .topHalf: return "⌃⌥↑"
-        case .bottomHalf: return "⌃⌥↓"
-        case .topLeftQuarter: return "⌃⌥U"
-        case .topRightQuarter: return "⌃⌥I"
-        case .bottomLeftQuarter: return "⌃⌥J"
-        case .bottomRightQuarter: return "⌃⌥K"
-        case .maximize: return "⌃⌥⏎"
-        case .center: return "⌃⌥C"
-        case .nextDisplay: return "⌃⌥N"
+        case .leftHalf: return "tileLeft"
+        case .rightHalf: return "tileRight"
+        case .topHalf: return "tileTop"
+        case .bottomHalf: return "tileBottom"
+        case .topLeftQuarter: return "tileTopLeft"
+        case .topRightQuarter: return "tileTopRight"
+        case .bottomLeftQuarter: return "tileBottomLeft"
+        case .bottomRightQuarter: return "tileBottomRight"
+        case .maximize: return "maximize"
+        case .center: return "center"
+        case .nextDisplay: return "nextDisplay"
         case .almostMaximize: return nil
         }
     }
@@ -161,26 +167,6 @@ final class WindowManager {
             ?? NSScreen.screens.first { $0.frame.intersects(rect) }
     }
 
-    func registerHotkeys() {
-        let bindings: [(Int, WindowAction)] = [
-            (Keys.leftArrow, .leftHalf),
-            (Keys.rightArrow, .rightHalf),
-            (Keys.upArrow, .topHalf),
-            (Keys.downArrow, .bottomHalf),
-            (Keys.returnKey, .maximize),
-            (Keys.c, .center),
-            (Keys.n, .nextDisplay),
-            (Keys.u, .topLeftQuarter),
-            (Keys.i, .topRightQuarter),
-            (Keys.j, .bottomLeftQuarter),
-            (Keys.k, .bottomRightQuarter),
-        ]
-        for (key, action) in bindings {
-            HotkeyManager.shared.register(keyCode: key, modifiers: Keys.controlOptionMod) {
-                WindowManager.shared.perform(action)
-            }
-        }
-    }
 }
 
 // Exposes the tiling actions as launcher results ("left half", "maximize").

@@ -4,6 +4,20 @@ All notable changes to Bolt are documented here. Versions follow
 [semver](https://semver.org): major for breaking changes to config or
 behavior, minor for new features, patch for fixes.
 
+## [1.2.0] - 2026-07-05
+
+### Added
+- All global hotkeys are now rebindable via a `hotkeys` block in
+  `~/.bolt/config.json` (launcher, clipboard, scratchpad, and every window
+  command). `"none"` disables a binding. Invalid combos fall back to the
+  default with a warning toast. "Reload Bolt Config" applies changes live.
+- Menu bar labels and window command hints show the user's actual bindings.
+
+### Fixed
+- A config file written by an older version (or with keys removed by hand)
+  no longer resets the whole config to defaults on load; missing keys keep
+  their defaults, present keys keep their values.
+
 ## [1.1.0] - 2026-07-05
 
 ### Added

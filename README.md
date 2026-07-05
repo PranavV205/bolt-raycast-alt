@@ -94,6 +94,8 @@ If something silently does nothing, check Accessibility first. After reinstallin
 
 ## Hotkeys
 
+All defaults below are rebindable, see [Rebinding](#rebinding). "Settings" is the `~/.bolt` folder: open it via the menu bar icon > Open Config Folder, or the "Open Config" command in the launcher.
+
 | Hotkey | Action |
 |---|---|
 | Option+Space | Toggle the launcher |
@@ -106,6 +108,22 @@ If something silently does nothing, check Accessibility first. After reinstallin
 | Ctrl+Option+N | Move window to next display |
 
 Inside the launcher: type to search, arrows or Ctrl+N/P to move, Enter to run, Cmd+1..9 to run the nth result, Esc to close. Destructive commands (Restart, Shut Down, Empty Trash, Force Quit) ask for Enter twice.
+
+### Rebinding
+
+Every global hotkey is rebindable. Add a `hotkeys` block to `~/.bolt/config.json` (the default file already contains one), then run "Reload Bolt Config" from the launcher, no restart needed:
+
+```json
+"hotkeys": {
+  "toggleLauncher": "cmd+space",
+  "clipboardHistory": "cmd+shift+v",
+  "scratchpad": "none"
+}
+```
+
+Binding names: `toggleLauncher`, `clipboardHistory`, `scratchpad`, `tileLeft`, `tileRight`, `tileTop`, `tileBottom`, `tileTopLeft`, `tileTopRight`, `tileBottomLeft`, `tileBottomRight`, `maximize`, `center`, `nextDisplay`.
+
+Combos are `modifier+modifier+key`. Modifiers: `cmd`, `ctrl`, `option` (or `alt`), `shift`. Keys: letters, digits, `space`, `return`, `tab`, `escape`, `delete`, arrow names (`left`, `right`, `up`, `down`), `home`, `end`, `pageup`, `pagedown`, `f1`-`f12`, and punctuation (`comma`, `period`, `slash`, `semicolon`, `quote`, `backslash`, `minus`, `equal`, `grave`). `"none"` disables a binding. At least one modifier is required except for F-keys. Invalid combos fall back to the default and show a warning toast, so a typo never locks you out of the launcher.
 
 ## Search syntax
 
@@ -168,6 +186,7 @@ Edit `~/.bolt/quicklinks.json`. `{query}` is replaced with whatever you type aft
 | `fileSearchEnabled` | true | mdfind file results |
 | `currencyEnabled` | true | Daily rates fetch (the app's only network call) |
 | `maxResults` | 40 | Result list cap |
+| `hotkeys` | see [Rebinding](#rebinding) | Global hotkey bindings |
 
 Runtime data (clipboard history, frecency, rates cache, scratchpad) lives in `~/Library/Application Support/Bolt/`.
 

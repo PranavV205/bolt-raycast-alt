@@ -42,6 +42,28 @@ struct AppConfig: Codable {
     var fileSearchEnabled: Bool = true
     var maxResults: Int = 40
     var currencyEnabled: Bool = true
+    var hotkeys: [String: String] = HotkeyBindings.defaults
+
+    enum CodingKeys: String, CodingKey {
+        case clipboardHistoryEnabled, clipboardCapacity, snippetExpansionEnabled
+        case fileSearchEnabled, maxResults, currencyEnabled, hotkeys
+    }
+
+    init() {}
+
+    // Every field is optional in the file, so configs written by older
+    // versions (or hand-edited ones with keys removed) keep their values
+    // instead of resetting the whole config to defaults.
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        clipboardHistoryEnabled = try c.decodeIfPresent(Bool.self, forKey: .clipboardHistoryEnabled) ?? true
+        clipboardCapacity = try c.decodeIfPresent(Int.self, forKey: .clipboardCapacity) ?? 50
+        snippetExpansionEnabled = try c.decodeIfPresent(Bool.self, forKey: .snippetExpansionEnabled) ?? true
+        fileSearchEnabled = try c.decodeIfPresent(Bool.self, forKey: .fileSearchEnabled) ?? true
+        maxResults = try c.decodeIfPresent(Int.self, forKey: .maxResults) ?? 40
+        currencyEnabled = try c.decodeIfPresent(Bool.self, forKey: .currencyEnabled) ?? true
+        hotkeys = try c.decodeIfPresent([String: String].self, forKey: .hotkeys) ?? HotkeyBindings.defaults
+    }
 
     static var shared: AppConfig = load()
 

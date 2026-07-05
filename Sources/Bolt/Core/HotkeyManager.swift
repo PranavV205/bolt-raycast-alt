@@ -32,6 +32,14 @@ final class HotkeyManager {
         }
     }
 
+    func unregisterAll() {
+        for ref in hotKeyRefs {
+            if let ref { UnregisterEventHotKey(ref) }
+        }
+        hotKeyRefs.removeAll()
+        handlers.removeAll()
+    }
+
     private func installDispatcher() {
         var eventType = EventTypeSpec(
             eventClass: OSType(kEventClassKeyboard),
