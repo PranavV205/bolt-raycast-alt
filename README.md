@@ -14,6 +14,7 @@ A native macOS keyboard launcher. One hotkey, fuzzy search across apps, files, w
 [Search syntax](#search-syntax) ·
 [Snippets](#snippets) ·
 [Quicklinks](#quicklinks) ·
+[Aliases](#aliases) ·
 [Config](#config) ·
 [Privacy](#privacy-notes) ·
 [Architecture](#architecture) ·
@@ -121,7 +122,7 @@ Every global hotkey is rebindable. Add a `hotkeys` block to `~/.bolt/config.json
 }
 ```
 
-Binding names: `toggleLauncher`, `clipboardHistory`, `scratchpad`, `tileLeft`, `tileRight`, `tileTop`, `tileBottom`, `tileTopLeft`, `tileTopRight`, `tileBottomLeft`, `tileBottomRight`, `maximize`, `center`, `nextDisplay`.
+Binding names: `toggleLauncher`, `clipboardHistory`, `scratchpad`, `tileLeft`, `tileRight`, `tileTop`, `tileBottom`, `tileTopLeft`, `tileTopRight`, `tileBottomLeft`, `tileBottomRight`, `maximize`, `almostMaximize` (unbound by default), `center`, `nextDisplay`.
 
 Combos are `modifier+modifier+key`. Modifiers: `cmd`, `ctrl`, `option` (or `alt`), `shift`. Keys: letters, digits, `space`, `return`, `tab`, `escape`, `delete`, arrow names (`left`, `right`, `up`, `down`), `home`, `end`, `pageup`, `pagedown`, `f1`-`f12`, and punctuation (`comma`, `period`, `slash`, `semicolon`, `quote`, `backslash`, `minus`, `equal`, `grave`). `"none"` disables a binding. At least one modifier is required except for F-keys. Invalid combos fall back to the default and show a warning toast, so a typo never locks you out of the launcher.
 
@@ -174,6 +175,19 @@ Edit `~/.bolt/quicklinks.json`. `{query}` is replaced with whatever you type aft
 ]
 ```
 
+## Aliases
+
+`~/.bolt/aliases.json` maps a keyword to the query it stands for. Typing the keyword searches as if you typed the expansion, so an alias can point at any app, command, snippet or quicklink. Words after the alias are appended, which makes quicklink shortcuts work: with the alias below, `gs swift fuzzy` searches GitHub for "swift fuzzy".
+
+```json
+{
+  "dm": "dark mode",
+  "gs": "gh"
+}
+```
+
+Run "Reload Bolt Config" after editing.
+
 ## Config
 
 `~/.bolt/config.json`:
@@ -184,7 +198,8 @@ Edit `~/.bolt/quicklinks.json`. `{query}` is replaced with whatever you type aft
 | `clipboardCapacity` | 50 | FIFO cap, oldest evicted |
 | `snippetExpansionEnabled` | true | Live `;keyword` expansion |
 | `fileSearchEnabled` | true | mdfind file results |
-| `currencyEnabled` | true | Daily rates fetch (the app's only network call) |
+| `currencyEnabled` | true | Daily currency rates fetch |
+| `updateCheckEnabled` | true | Daily new-release check against the GitHub API |
 | `maxResults` | 40 | Result list cap |
 | `hotkeys` | see [Rebinding](#rebinding) | Global hotkey bindings |
 
@@ -193,7 +208,7 @@ Runtime data (clipboard history, frecency, rates cache, scratchpad) lives in `~/
 ## Privacy notes
 
 - Clipboard history persists to disk unencrypted. Entries marked transient/concealed by password managers are skipped automatically. `clip` then Ctrl+Enter deletes a single entry.
-- The only network request is the daily currency rates fetch (api.frankfurter.app); set `currencyEnabled` to false for a fully offline build.
+- Bolt makes exactly two kinds of network request, each at most once a day: currency rates (api.frankfurter.app) and an update check (api.github.com). Both send nothing but the request itself, and both can be turned off (`currencyEnabled`, `updateCheckEnabled`) for a fully offline build.
 
 ## Architecture
 

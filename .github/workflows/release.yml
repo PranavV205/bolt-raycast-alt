@@ -1,0 +1,39 @@
+name: Release
+
+# Tag a commit vX.Y.Z and push the tag; this builds a universal Bolt.app,
+# zips it, and attaches it to a GitHub release with notes from CHANGELOG.md.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build universal app
+        run: UNIVERSAL=1 ./build-app.sh
+
+      - name: Package
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          ditto -c -k --keepParent dist/Bolt.app "Bolt-${VERSION}.zip"
+
+      - name: Extract release notes from changelog
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk -v ver="$VERSION" '/^## \[/{p = index($0, "[" ver "]") > 0} p' CHANGELOG.md | tail -n +2 > notes.md
+          if ! [ -s notes.md ]; then echo "Release ${GITHUB_REF_NAME}" > notes.md; fi
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" "Bolt-${VERSION}.zip" \
+            --title "Bolt ${VERSION}" \
+            --notes-file notes.md

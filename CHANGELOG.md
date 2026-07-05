@@ -4,6 +4,18 @@ All notable changes to Bolt are documented here. Versions follow
 [semver](https://semver.org): major for breaking changes to config or
 behavior, minor for new features, patch for fixes.
 
+## [1.3.0] - 2026-07-05
+
+### Added
+- Update check: once a day Bolt asks the GitHub releases API whether a newer
+  version exists and shows a clickable toast if so. Disable with
+  `"updateCheckEnabled": false`. A manual "Check for Updates" command too.
+- Aliases: `~/.bolt/aliases.json` maps keywords to queries ("dm" can stand
+  for "dark mode"), with trailing words appended so quicklink arguments work.
+- `almostMaximize` is now a bindable hotkey action (unbound by default).
+- Releases are built by GitHub Actions on tag push: universal (Apple Silicon
+  and Intel) binary, built from clean source.
+
 ## [1.2.0] - 2026-07-05
 
 ### Added

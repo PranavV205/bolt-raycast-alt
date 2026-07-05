@@ -71,7 +71,7 @@ final class SearchCoordinator: ObservableObject {
     }
 
     private func compute() {
-        let q = Query(query)
+        let q = Query(AliasStore.shared.rewrite(query))
         let gen = generation
 
         if q.isEmpty {

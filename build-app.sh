@@ -7,10 +7,18 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-echo "==> swift build -c release"
-swift build -c release
+# UNIVERSAL=1 builds a fat arm64+x86_64 binary (used by the release workflow
+# so Intel Macs can run downloaded builds). Local builds stay single-arch.
+if [[ "${UNIVERSAL:-0}" == "1" ]]; then
+    echo "==> swift build -c release (universal)"
+    swift build -c release --arch arm64 --arch x86_64
+    BIN=".build/apple/Products/Release/Bolt"
+else
+    echo "==> swift build -c release"
+    swift build -c release
+    BIN=".build/release/Bolt"
+fi
 
-BIN=".build/release/Bolt"
 APP="dist/Bolt.app"
 
 echo "==> assembling ${APP}"

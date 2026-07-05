@@ -22,6 +22,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         ClipboardManager.shared.start()
         SnippetExpander.shared.start(snippets: PanelController.shared.coordinator.snippetsProvider.snippets)
         CurrencyService.shared.refreshIfStale()
+        UpdateChecker.shared.checkIfStale()
+        _ = AliasStore.shared  // materializes the starter aliases.json
 
         // "Reload Bolt Config" command.
         NotificationCenter.default.addObserver(
@@ -30,6 +32,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let coordinator = PanelController.shared.coordinator
             coordinator.snippetsProvider.reload()
             coordinator.quicklinksProvider.load()
+            AliasStore.shared.load()
             HotkeyBindings.apply()
             self?.rebuildStatusMenu()
         }

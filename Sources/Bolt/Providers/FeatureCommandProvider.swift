@@ -87,6 +87,14 @@ final class FeatureCommandProvider: SearchProvider {
                 { Self.toggleLoginItem() }
             ),
             (
+                "feature:checkupdates", "Check for Updates", "Bolt \(UpdateChecker.currentVersion) installed",
+                "arrow.down.circle.fill", ["update bolt", "new version", "upgrade"],
+                {
+                    UpdateChecker.shared.check(manual: true)
+                    return .dismiss
+                }
+            ),
+            (
                 "feature:quit", "Quit Bolt", "Stop the launcher agent",
                 "xmark.octagon.fill", ["exit bolt"],
                 {

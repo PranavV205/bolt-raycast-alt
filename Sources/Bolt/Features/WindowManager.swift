@@ -61,7 +61,7 @@ enum WindowAction: String, CaseIterable {
         case .maximize: return "maximize"
         case .center: return "center"
         case .nextDisplay: return "nextDisplay"
-        case .almostMaximize: return nil
+        case .almostMaximize: return "almostMaximize"
         }
     }
 

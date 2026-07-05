@@ -6,11 +6,22 @@ final class Toast {
     private static var panel: NSPanel?
     private static var hideWork: DispatchWorkItem?
 
-    static func show(_ text: String, symbol: String = "checkmark.circle.fill", duration: TimeInterval = 1.6) {
+    static func show(
+        _ text: String,
+        symbol: String = "checkmark.circle.fill",
+        duration: TimeInterval = 1.6,
+        action: (() -> Void)? = nil
+    ) {
         hideWork?.cancel()
         panel?.orderOut(nil)
 
-        let view = ToastView(text: text, symbol: symbol)
+        let view = ToastView(text: text, symbol: symbol, action: action.map { act in
+            {
+                act()
+                panel?.orderOut(nil)
+                panel = nil
+            }
+        })
         let hosting = NSHostingView(rootView: view)
         hosting.setFrameSize(hosting.fittingSize)
 
@@ -24,7 +35,7 @@ final class Toast {
         p.isOpaque = false
         p.backgroundColor = .clear
         p.hasShadow = true
-        p.ignoresMouseEvents = true
+        p.ignoresMouseEvents = action == nil
         p.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         p.contentView = hosting
 
@@ -50,6 +61,7 @@ final class Toast {
 private struct ToastView: View {
     let text: String
     let symbol: String
+    var action: (() -> Void)?
 
     var body: some View {
         HStack(spacing: 8) {
@@ -71,5 +83,7 @@ private struct ToastView: View {
         )
         .padding(8)
         .frame(maxWidth: 420)
+        .contentShape(Rectangle())
+        .onTapGesture { action?() }
     }
 }

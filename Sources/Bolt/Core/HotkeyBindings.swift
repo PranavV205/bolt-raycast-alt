@@ -19,6 +19,7 @@ enum HotkeyBindings {
         "tileBottomLeft": "ctrl+option+j",
         "tileBottomRight": "ctrl+option+k",
         "maximize": "ctrl+option+return",
+        "almostMaximize": "none",
         "center": "ctrl+option+c",
         "nextDisplay": "ctrl+option+n",
     ]
@@ -36,6 +37,7 @@ enum HotkeyBindings {
         "tileBottomLeft": { WindowManager.shared.perform(.bottomLeftQuarter) },
         "tileBottomRight": { WindowManager.shared.perform(.bottomRightQuarter) },
         "maximize": { WindowManager.shared.perform(.maximize) },
+        "almostMaximize": { WindowManager.shared.perform(.almostMaximize) },
         "center": { WindowManager.shared.perform(.center) },
         "nextDisplay": { WindowManager.shared.perform(.nextDisplay) },
     ]

@@ -27,6 +27,7 @@ enum AppPaths {
     static var configFile: URL { configDir.appendingPathComponent("config.json") }
     static var snippetsFile: URL { configDir.appendingPathComponent("snippets.json") }
     static var quicklinksFile: URL { configDir.appendingPathComponent("quicklinks.json") }
+    static var aliasesFile: URL { configDir.appendingPathComponent("aliases.json") }
 
     static var frecencyFile: URL { supportDir.appendingPathComponent("frecency.json") }
     static var clipboardFile: URL { supportDir.appendingPathComponent("clipboard.json") }
@@ -42,11 +43,12 @@ struct AppConfig: Codable {
     var fileSearchEnabled: Bool = true
     var maxResults: Int = 40
     var currencyEnabled: Bool = true
+    var updateCheckEnabled: Bool = true
     var hotkeys: [String: String] = HotkeyBindings.defaults
 
     enum CodingKeys: String, CodingKey {
         case clipboardHistoryEnabled, clipboardCapacity, snippetExpansionEnabled
-        case fileSearchEnabled, maxResults, currencyEnabled, hotkeys
+        case fileSearchEnabled, maxResults, currencyEnabled, updateCheckEnabled, hotkeys
     }
 
     init() {}
@@ -62,6 +64,7 @@ struct AppConfig: Codable {
         fileSearchEnabled = try c.decodeIfPresent(Bool.self, forKey: .fileSearchEnabled) ?? true
         maxResults = try c.decodeIfPresent(Int.self, forKey: .maxResults) ?? 40
         currencyEnabled = try c.decodeIfPresent(Bool.self, forKey: .currencyEnabled) ?? true
+        updateCheckEnabled = try c.decodeIfPresent(Bool.self, forKey: .updateCheckEnabled) ?? true
         hotkeys = try c.decodeIfPresent([String: String].self, forKey: .hotkeys) ?? HotkeyBindings.defaults
     }
 
