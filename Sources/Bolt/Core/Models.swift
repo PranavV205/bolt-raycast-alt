@@ -31,6 +31,7 @@ enum ResultKind: String {
     case menuItem = "Menu"
     case definition = "Define"
     case color = "Color"
+    case bookmark = "Bookmark"
 }
 
 struct ResultItem: Identifiable {

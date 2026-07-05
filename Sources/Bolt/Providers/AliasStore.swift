@@ -28,9 +28,13 @@ final class AliasStore {
         }
     }
 
+    func rewrite(_ text: String) -> String {
+        Self.rewrite(text, aliases: aliases)
+    }
+
     // Rewrites a query whose first word is an alias. Case-insensitive on
     // the keyword, leaves everything else untouched.
-    func rewrite(_ text: String) -> String {
+    static func rewrite(_ text: String, aliases: [String: String]) -> String {
         guard !aliases.isEmpty else { return text }
         let trimmedLeading = text.drop(while: { $0 == " " })
         guard !trimmedLeading.isEmpty else { return text }

@@ -29,6 +29,7 @@ final class SearchCoordinator: ObservableObject {
     let dictionaryProvider = DictionaryProvider()
     let windowCommands = WindowCommandProvider()
     let featureCommands = FeatureCommandProvider()
+    let bookmarksProvider = BookmarksProvider()
 
     // Providers consulted for a plain (non-prefixed) query.
     private var generalProviders: [SearchProvider] {
@@ -39,6 +40,7 @@ final class SearchCoordinator: ObservableObject {
             windowSwitcher,
             snippetsProvider,
             quicklinksProvider,
+            bookmarksProvider,
             systemProvider,
             windowCommands,
             featureCommands,
@@ -48,6 +50,7 @@ final class SearchCoordinator: ObservableObject {
     // Called by the panel each time it is summoned.
     func prepareForOpen(targetApp: NSRunningApplication?) {
         appProvider.refreshIfStale()
+        bookmarksProvider.refreshIfStale()
         windowSwitcher.prefetch()
         menuBarProvider.prefetch(app: targetApp)
         CurrencyService.shared.refreshIfStale()

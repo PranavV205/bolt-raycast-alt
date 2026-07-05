@@ -29,6 +29,22 @@ enum PasteHelper {
         pb.setString(text, forType: .string)
     }
 
+    // Moves the caret left after a synthesized paste has landed, so snippet
+    // {cursor} markers work. Delay must exceed the paste's own delay.
+    static func moveCaretBack(_ count: Int, after delay: TimeInterval = 0.45) {
+        guard count > 0, canSynthesizePaste,
+              let source = CGEventSource(stateID: .combinedSessionState) else { return }
+        let steps = min(count, 500)
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            for _ in 0..<steps {
+                let down = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_LeftArrow), keyDown: true)
+                let up = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_LeftArrow), keyDown: false)
+                down?.post(tap: .cghidEventTap)
+                up?.post(tap: .cghidEventTap)
+            }
+        }
+    }
+
     private static func synthesizeCmdV() -> Bool {
         guard canSynthesizePaste else { return false }
         guard let source = CGEventSource(stateID: .combinedSessionState) else { return false }

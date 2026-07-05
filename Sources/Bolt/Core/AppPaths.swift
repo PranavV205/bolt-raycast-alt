@@ -44,11 +44,13 @@ struct AppConfig: Codable {
     var maxResults: Int = 40
     var currencyEnabled: Bool = true
     var updateCheckEnabled: Bool = true
+    var bookmarksEnabled: Bool = true
     var hotkeys: [String: String] = HotkeyBindings.defaults
 
     enum CodingKeys: String, CodingKey {
         case clipboardHistoryEnabled, clipboardCapacity, snippetExpansionEnabled
-        case fileSearchEnabled, maxResults, currencyEnabled, updateCheckEnabled, hotkeys
+        case fileSearchEnabled, maxResults, currencyEnabled, updateCheckEnabled
+        case bookmarksEnabled, hotkeys
     }
 
     init() {}
@@ -65,6 +67,7 @@ struct AppConfig: Codable {
         maxResults = try c.decodeIfPresent(Int.self, forKey: .maxResults) ?? 40
         currencyEnabled = try c.decodeIfPresent(Bool.self, forKey: .currencyEnabled) ?? true
         updateCheckEnabled = try c.decodeIfPresent(Bool.self, forKey: .updateCheckEnabled) ?? true
+        bookmarksEnabled = try c.decodeIfPresent(Bool.self, forKey: .bookmarksEnabled) ?? true
         hotkeys = try c.decodeIfPresent([String: String].self, forKey: .hotkeys) ?? HotkeyBindings.defaults
     }
 

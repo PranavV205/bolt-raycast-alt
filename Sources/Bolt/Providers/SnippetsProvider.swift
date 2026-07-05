@@ -5,8 +5,16 @@ struct Snippet: Codable {
     var name: String
     var content: String
 
+    static let cursorToken = "{cursor}"
+
     // Supported placeholders inside content.
     func expandedContent() -> String {
+        expandedWithCursor().text
+    }
+
+    // caretBack: how many characters the caret must move left after pasting
+    // so it lands where {cursor} was. 0 when the marker is absent.
+    func expandedWithCursor() -> (text: String, caretBack: Int) {
         var text = content
         if text.contains("{date}") {
             let f = DateFormatter()
@@ -22,7 +30,12 @@ struct Snippet: Codable {
             let clip = NSPasteboard.general.string(forType: .string) ?? ""
             text = text.replacingOccurrences(of: "{clipboard}", with: clip)
         }
-        return text
+        if let range = text.range(of: Self.cursorToken) {
+            let caretBack = text.distance(from: range.upperBound, to: text.endIndex)
+            text.removeSubrange(range)
+            return (text, caretBack)
+        }
+        return (text, 0)
     }
 }
 
@@ -96,13 +109,14 @@ final class SnippetsProvider: SearchProvider {
                 score: score * 0.9,
                 accessory: snippet.keyword,
                 action: { modifiers in
-                    let content = snippet.expandedContent()
+                    let (content, caretBack) = snippet.expandedWithCursor()
                     ClipboardManager.shared.ignoreNextChange = true
                     if modifiers.contains(.command) {
                         PasteHelper.copy(text: content)
                         return .toast("Snippet copied")
                     }
                     if PasteHelper.paste(text: content) {
+                        PasteHelper.moveCaretBack(caretBack)
                         return .dismiss
                     }
                     return .toast("Copied (grant Accessibility to auto-paste)")

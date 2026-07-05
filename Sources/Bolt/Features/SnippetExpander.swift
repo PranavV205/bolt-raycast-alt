@@ -29,9 +29,15 @@ final class SnippetExpander {
 
     func start(snippets: [Snippet]) {
         update(snippets: snippets)
-        guard AppConfig.shared.snippetExpansionEnabled else { return }
+        guard AppConfig.shared.snippetExpansionEnabled, tap == nil else { return }
         guard AX.trusted else {
-            NSLog("Bolt: snippet expansion disabled, Accessibility not granted")
+            // Accessibility can be granted after launch; keep checking so the
+            // user does not have to restart Bolt for expansion to kick in.
+            NSLog("Bolt: snippet expansion waiting for Accessibility")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
+                guard let self else { return }
+                self.start(snippets: self.snippets)
+            }
             return
         }
 
@@ -105,7 +111,7 @@ final class SnippetExpander {
         suppress = true
         buffer = ""
         let keywordLength = snippet.keyword.count
-        let content = snippet.expandedContent()
+        let (content, caretBack) = snippet.expandedWithCursor()
 
         guard let source = CGEventSource(stateID: .combinedSessionState) else {
             suppress = false
@@ -133,6 +139,19 @@ final class SnippetExpander {
             vUp?.flags = .maskCommand
             vDown?.post(tap: .cghidEventTap)
             vUp?.post(tap: .cghidEventTap)
+
+            // Walk the caret back to the {cursor} marker once the paste has
+            // landed, still inside the suppress window.
+            if caretBack > 0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                    for _ in 0..<min(caretBack, 500) {
+                        let down = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_LeftArrow), keyDown: true)
+                        let up = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_LeftArrow), keyDown: false)
+                        down?.post(tap: .cghidEventTap)
+                        up?.post(tap: .cghidEventTap)
+                    }
+                }
+            }
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                 self?.suppress = false

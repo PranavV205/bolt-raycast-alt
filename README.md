@@ -37,6 +37,7 @@ A native macOS keyboard launcher. One hotkey, fuzzy search across apps, files, w
 - **System commands.** Dark mode, empty trash, lock, sleep, restart, mute, quit and force-quit apps.
 - **Window management.** Halves, quarters, maximize, center, next display, by hotkey or by name.
 - **Quicklinks.** Keyword web searches (`g`, `gh`, `yt`, ...), fully customizable.
+- **Browser bookmarks.** Chrome, Brave, Edge, Chromium, Vivaldi (and Safari with Full Disk Access) bookmarks in your results, opened in your default browser.
 - **Scratchpad.** A pop-up note that persists between sessions.
 
 | Calculator | Currency |
@@ -165,7 +166,7 @@ Edit `~/.bolt/snippets.json`:
 ]
 ```
 
-Placeholders: `{date}`, `{time}`, `{clipboard}`. Run "Reload Bolt Config" from the launcher after editing.
+Placeholders: `{date}`, `{time}`, `{clipboard}`, `{cursor}`. The `{cursor}` marker sets where the caret lands after the snippet is inserted (needs Accessibility, like auto-paste). Run "Reload Bolt Config" from the launcher after editing.
 
 ## Quicklinks
 
@@ -202,6 +203,7 @@ Run "Reload Bolt Config" after editing.
 | `fileSearchEnabled` | true | mdfind file results |
 | `currencyEnabled` | true | Daily currency rates fetch |
 | `updateCheckEnabled` | true | Daily new-release check against the GitHub API |
+| `bookmarksEnabled` | true | Browser bookmarks in search results |
 | `maxResults` | 40 | Result list cap |
 | `hotkeys` | see [Rebinding](#rebinding) | Global hotkey bindings |
 

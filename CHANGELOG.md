@@ -4,6 +4,24 @@ All notable changes to Bolt are documented here. Versions follow
 [semver](https://semver.org): major for breaking changes to config or
 behavior, minor for new features, patch for fixes.
 
+## [1.4.0] - 2026-07-06
+
+### Added
+- Browser bookmark search: bookmarks from Chrome, Brave, Edge, Chromium and
+  Vivaldi (all profiles) appear in results and open in your default browser.
+  Safari bookmarks are included when Bolt has Full Disk Access. Disable with
+  `"bookmarksEnabled": false`.
+- Snippets support a `{cursor}` placeholder: after insertion or live
+  expansion, the caret lands where the marker was.
+- Test suite (fuzzy matcher, calculator parser, hotkey combos, semver
+  comparison, alias rewriting, snippet placeholders) and a CI workflow that
+  runs it on every push and pull request.
+
+### Fixed
+- Live snippet expansion used to require an app restart if Accessibility
+  was granted after launch; it now starts on its own within seconds of the
+  grant.
+
 ## [1.3.1] - 2026-07-05
 
 ### Added
