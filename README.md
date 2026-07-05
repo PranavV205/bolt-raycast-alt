@@ -85,6 +85,8 @@ Prefer building from source? Read on.
 
 Requires Xcode command line tools (Swift 5.9+). For development, `swift build && swift run` works too, but permissions are tied to the app bundle, so day-to-day use should be the installed .app.
 
+If you rebuild often: macOS ties permission grants to the code signature, and the default ad-hoc signature changes every build, so grants like Accessibility die on each reinstall. Create a self-signed code-signing certificate named "Bolt Dev" (Keychain Access > Certificate Assistant > Create a Certificate, type: Code Signing) and `build-app.sh` will use it automatically, keeping your grants across rebuilds. `CODESIGN_IDENTITY=<name>` overrides the identity.
+
 ## Permissions (one-time)
 
 Bolt asks for these on first run, all in System Settings > Privacy & Security:

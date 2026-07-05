@@ -33,11 +33,17 @@ cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 echo "==> strip"
 strip "$APP/Contents/MacOS/Bolt"
 
-# Ad-hoc signature: enough for a personal, non-distributed build. A stable
-# signature also keeps the TCC permission grants (Accessibility etc.)
-# attached across rebuilds of the same bundle path.
-echo "==> codesign (ad-hoc)"
-codesign --force --sign - "$APP"
+# Prefer a stable signing identity when one exists: macOS ties permission
+# grants (Accessibility etc.) to the signer, so a real certificate keeps
+# them across rebuilds. Ad-hoc signatures change every build and lose them.
+# Create one via Keychain Access > Certificate Assistant (type: Code
+# Signing, name: "Bolt Dev"), or override with CODESIGN_IDENTITY.
+IDENTITY="${CODESIGN_IDENTITY:-}"
+if [[ -z "$IDENTITY" ]] && security find-identity -v -p codesigning 2>/dev/null | grep -q '"Bolt Dev"'; then
+    IDENTITY="Bolt Dev"
+fi
+echo "==> codesign (${IDENTITY:-ad-hoc})"
+codesign --force --sign "${IDENTITY:--}" "$APP"
 
 echo "==> done: $APP"
 

@@ -4,6 +4,13 @@ All notable changes to Bolt are documented here. Versions follow
 [semver](https://semver.org): major for breaking changes to config or
 behavior, minor for new features, patch for fixes.
 
+## [Unreleased]
+
+### Changed
+- `build-app.sh` signs with a "Bolt Dev" certificate when the keychain has
+  one (or `CODESIGN_IDENTITY`), so permission grants survive rebuilds during
+  development. Falls back to ad-hoc signing as before.
+
 ## [1.4.0] - 2026-07-06
 
 ### Added
