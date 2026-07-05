@@ -90,10 +90,14 @@ final class SearchCoordinator: ObservableObject {
         } else if let arg = q.argument(afterKeyword: "clip") ?? q.argument(afterKeyword: "clipboard") {
             items = clipboardProvider.search(arg)
         } else if let arg = q.argument(afterKeyword: "kill"), !arg.isEmpty || q.lowercased == "kill" {
-            items = processProvider.search(arg)
+            if let port = ProcessProvider.portNumber(in: arg) {
+                items = processProvider.portItems(port: port, onRefresh: refreshIfCurrent(gen))
+            } else {
+                items = processProvider.search(arg)
+            }
         } else if let arg = q.argument(afterKeyword: "servers") ?? q.argument(afterKeyword: "ports"),
                   !arg.isEmpty || q.lowercased == "servers" || q.lowercased == "ports" {
-            items = processProvider.servers(filter: arg)
+            items = processProvider.serverItems(filter: arg, onRefresh: refreshIfCurrent(gen))
         } else if let arg = q.argument(afterKeyword: "define"), !arg.isEmpty {
             items = dictionaryProvider.define(arg)
         } else if let arg = q.argument(afterKeyword: "emoji") {
@@ -115,6 +119,14 @@ final class SearchCoordinator: ObservableObject {
         items.sort { $0.score > $1.score }
         results = Array(items.prefix(AppConfig.shared.maxResults))
         selectedIndex = 0
+    }
+
+    // Re-runs compute once a background scan lands, unless the query moved on.
+    private func refreshIfCurrent(_ gen: Int) -> () -> Void {
+        { [weak self] in
+            guard let self, self.generation == gen else { return }
+            self.compute()
+        }
     }
 
     private func applyFrecency(_ items: inout [ResultItem]) {
