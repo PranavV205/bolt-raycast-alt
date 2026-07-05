@@ -95,6 +95,11 @@ final class FeatureCommandProvider: SearchProvider {
                 }
             ),
             (
+                "feature:servers", "Dev Servers", "TCP listeners with project folder (or type servers)",
+                "server.rack", ["ports", "listening", "localhost"],
+                { .replaceQuery("servers ") }
+            ),
+            (
                 "feature:quit", "Quit Bolt", "Stop the launcher agent",
                 "xmark.octagon.fill", ["exit bolt"],
                 {

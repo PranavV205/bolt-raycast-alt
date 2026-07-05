@@ -4,6 +4,17 @@ All notable changes to Bolt are documented here. Versions follow
 [semver](https://semver.org): major for breaking changes to config or
 behavior, minor for new features, patch for fixes.
 
+## [1.3.1] - 2026-07-05
+
+### Added
+- `servers` (alias `ports`) lists every TCP listener with its ports, project
+  folder (the process working directory) and full command line, so dev
+  servers are identifiable at a glance. `servers vite` filters by name, port
+  or project. System daemons are hidden. Enter kills.
+- `kill <port>` (e.g. `kill 3000` or `kill :3000`) shows what is listening
+  on that TCP port, with the full command line so dev servers are tellable
+  apart. Enter sends SIGTERM, Cmd+Enter SIGKILL.
+
 ## [1.3.0] - 2026-07-05
 
 ### Added

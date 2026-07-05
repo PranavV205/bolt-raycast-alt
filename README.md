@@ -138,6 +138,8 @@ Combos are `modifier+modifier+key`. Modifiers: `cmd`, `ctrl`, `option` (or `alt`
 | `#ff8800` | Color conversions (hex / rgb / hsl) |
 | `clip` or `clip <text>` | Clipboard history. Enter pastes, Cmd+Enter copies, Ctrl+Enter deletes |
 | `kill <name>` | Processes by CPU. Enter SIGTERM, Cmd+Enter SIGKILL |
+| `kill 3000` | What's listening on that TCP port, with its command line |
+| `servers` | All dev servers: ports, project folder, command. Enter kills |
 | `define <word>` | System dictionary |
 | `:fire` or `emoji rocket` | Emoji, Enter pastes |
 | `/save` | Menu items of the app you were in, Enter triggers |

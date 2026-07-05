@@ -91,6 +91,9 @@ final class SearchCoordinator: ObservableObject {
             items = clipboardProvider.search(arg)
         } else if let arg = q.argument(afterKeyword: "kill"), !arg.isEmpty || q.lowercased == "kill" {
             items = processProvider.search(arg)
+        } else if let arg = q.argument(afterKeyword: "servers") ?? q.argument(afterKeyword: "ports"),
+                  !arg.isEmpty || q.lowercased == "servers" || q.lowercased == "ports" {
+            items = processProvider.servers(filter: arg)
         } else if let arg = q.argument(afterKeyword: "define"), !arg.isEmpty {
             items = dictionaryProvider.define(arg)
         } else if let arg = q.argument(afterKeyword: "emoji") {
