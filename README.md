@@ -7,6 +7,7 @@ A native macOS keyboard launcher. One hotkey, fuzzy search across apps, files, w
 <p align="center"><img src="docs/screenshots/hero.png" width="660" alt="Bolt launcher showing app results"></p>
 
 [Features](#features) ·
+[Download](#download) ·
 [Build and install](#build-and-install) ·
 [Permissions](#permissions-one-time) ·
 [Hotkeys](#hotkeys) ·
@@ -64,6 +65,14 @@ A native macOS keyboard launcher. One hotkey, fuzzy search across apps, files, w
 | Quicklinks | |
 |---|---|
 | ![Quicklinks](docs/screenshots/quicklink.png) | |
+
+## Download
+
+Grab `Bolt-x.y.z.zip` from the [latest release](https://github.com/PranavV205/bolt-raycast-alt/releases/latest), unzip, and drag `Bolt.app` to `/Applications`.
+
+First launch: macOS will warn that the app is from an unidentified developer (it is open source and self-signed, not notarized). Right-click `Bolt.app` > Open > Open, or approve it under System Settings > Privacy & Security. This is a one-time step, as is granting Accessibility for the window features (see [Permissions](#permissions-one-time)).
+
+Prefer building from source? Read on.
 
 ## Build and install
 
